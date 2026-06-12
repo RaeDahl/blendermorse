@@ -1,2 +1,2 @@
 # blendermorse
-Blender extension for easy morse code modifier
+### Blender extension for automatic morse code keyframing
