@@ -1,6 +1,7 @@
 # Contains all libraries/include files for simpler imports
 
 # Libraries
+import bpy
 
 # Local Imports
 
