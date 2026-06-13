@@ -50,9 +50,6 @@ def insert_keys(): #TODO: figure out how to get params from menus
         current_frame = current_frame + time_unit * DIT + smoothing
 
 
-
-
-
 def translate(plaintext: str) -> str:
     """
     Description
