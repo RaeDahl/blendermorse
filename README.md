@@ -11,3 +11,8 @@ basic parameters such as high/low values and time unit, then
 translates that plaintext into morse code and inserts keyframes
 for the active object, so you don't have to painstakingly set 
 every keyframe by hand.
+
+### Current Progress
+As of right now, most of the backend is written, but has not yet
+been tested. The UI is still in progress, and I haven't really
+touched documentation yet.
