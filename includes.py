@@ -4,9 +4,10 @@
 import bpy
 
 # Local Imports
+import ui_panels
 
 # Morse code lookup table
-# TODO: decide on string formatting
+
 morsetable = {
     "a" : "",
     "b" : "",
