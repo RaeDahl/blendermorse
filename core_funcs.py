@@ -11,12 +11,41 @@ LETTERSPACE = 1
 WORDSPACE = 5
 
 
-def insert_keys(): #TODO: figure out how to get params from menus
-
-    # set up inputs???
+def insert_keys(obj, morse: str, start_point: int, high: float, low: float, chosen_property: str, time_unit: int, smoothing: int):
+    """
+    Description
+    ------------
+    Inserts keyframes for morse code
     
-    # get active object
-    object = bpy.context.active_object
+    Parameters
+    ------------
+    obj
+        The active object to be keyframed
+    
+    morse : str
+        The morse code string to be implemented
+
+    start_point : str
+        The frame to begin inserting keyframes at
+
+    high_val : float
+        The high or "on" value to set keyframes to
+
+    low_val : float
+        The low or "off" value to set keyframes to
+
+    chosen_property : str
+        The property to animate, default is emission strength
+
+    time_unit : int
+        The base time unit in frames, equivalent to one dit
+
+    smoothing : int
+        The number of frames between high and low points
+        Cannot be greater than time_unit
+    """
+    
+    # set up inputs???
 
     # insert keys
     current_frame = start_point
@@ -24,23 +53,23 @@ def insert_keys(): #TODO: figure out how to get params from menus
     for char in morse:
         match char:
             case '.':
-                object.chosen_property = high
-                object.keyframe_insert(data_path = chosen_property, frame = current_frame)
+                obj.chosen_property = high
+                obj.keyframe_insert(data_path = chosen_property, frame = current_frame)
                 current_frame = current_frame + time_unit * DIT + smoothing
 
             case '-':
-                object.chosen_property = high
-                object.keyframe_insert(data_path = chosen_property, frame = current_frame)
+                obj.chosen_property = high
+                obj.keyframe_insert(data_path = chosen_property, frame = current_frame)
                 current_frame = current_frame + time_unit * DAH + smoothing
 
             case ' ':
-                object.chosen_property = low
-                object.keyframe_insert(data_path = chosen_property, frame = current_frame)
+                obj.chosen_property = low
+                obj.keyframe_insert(data_path = chosen_property, frame = current_frame)
                 current_frame = current_frame + time_unit * LETTERSPACE + smoothing
 
             case '/':
-                object.chosen_property = low
-                object.keyframe_insert(data_path = chosen_property, frame = current_frame)
+                obj.chosen_property = low
+                obj.keyframe_insert(data_path = chosen_property, frame = current_frame)
                 current_frame = current_frame + time_unit * WORDSPACE + smoothing
             
             case _:
@@ -48,8 +77,8 @@ def insert_keys(): #TODO: figure out how to get params from menus
 
 
         # add space
-        object.chosen_property = low
-        object.keyframe_insert(data_path = chosen_property, frame = current_frame)
+        obj.chosen_property = low
+        obj.keyframe_insert(data_path = chosen_property, frame = current_frame)
         current_frame = current_frame + time_unit * DIT + smoothing
 
 
@@ -97,3 +126,43 @@ def translate(plaintext: str) -> str:
     # combine into one string and return
     return ''.join(morse)
 
+def button_run(plaintext: str, start_point: int, high_val: float, low_val: float, chosen_property: str, time_unit: int, smoothing: int):
+    """
+    Description
+    ------------
+    Wrapper function that runs internal scripts for
+    translation/keyframing when UI button is pressed
+
+    Parameters
+    ------------
+    plaintext : str
+        The original text to be translated to morse
+
+    start_point : str
+        The frame to begin inserting keyframes at
+
+    high_val : float
+        The high or "on" value to set keyframes to
+
+    low_val : float
+        The low or "off" value to set keyframes to
+
+    chosen_property : str
+        The property to animate, default is emission strength
+
+    time_unit : int
+        The base time unit in frames, equivalent to one dit
+
+    smoothing : int
+        The number of frames between high and low points
+        Cannot be greater than time_unit
+    """
+
+    # Get active object
+    obj = bpy.context.active_object
+
+    # Translate plaintext to morse code
+    morse = translate(plaintext)
+
+    # Insert keyframes
+    insert_keys(obj, morse, start_point, high_val, low_val, chosen_property, time_unit, smoothing)
