@@ -4,7 +4,7 @@
 import bpy
 
 # Local Imports
-import ui_panels
+from ui_panels import BlendermorseGUI
 
 # Morse code lookup table
 
