@@ -48,7 +48,7 @@ class BlendermorseGUI(bpy.types.Panel):
         description = "Number of frames between high and low value",
         default = 0,
         min = 0,
-        max = time_unit # not 100% sure how to make this work
+        max = None # May set max to time unit in future versions, for now check on button press
     )
 
     start_point = bpy.props.IntProperty(
@@ -65,5 +65,11 @@ class BlendermorseGUI(bpy.types.Panel):
         default = "",
     )
 
-    # chosen_property = # not sure if I want a string or a dropdown
-    # TODO: write input for this
+    # mode # light/object material/custom?
+    mode = bpy.props.EnumProperty(
+        name = "Mode",
+        items = [
+            ("Material", "Material", "Edit emission strength of material"),
+            ("Light", "Light", "Edit the power of a light")
+        ]
+    )

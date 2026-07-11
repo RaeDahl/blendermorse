@@ -11,11 +11,12 @@ LETTERSPACE = 1
 WORDSPACE = 5
 
 
-def insert_keys(obj, morse: str, start_point: int, high: float, low: float, chosen_property: str, time_unit: int, smoothing: int):
+def insert_keys_emission(obj, morse: str, start_point: int, high: float, low: float, time_unit: int, smoothing: int):
     """
     Description
     ------------
-    Inserts keyframes for morse code
+    Keyframes the emission strength of the
+    active material
     
     Parameters
     ------------
@@ -34,9 +35,6 @@ def insert_keys(obj, morse: str, start_point: int, high: float, low: float, chos
     low_val : float
         The low or "off" value to set keyframes to
 
-    chosen_property : str
-        The property to animate, default is emission strength
-
     time_unit : int
         The base time unit in frames, equivalent to one dit
 
@@ -44,8 +42,6 @@ def insert_keys(obj, morse: str, start_point: int, high: float, low: float, chos
         The number of frames between high and low points
         Cannot be greater than time_unit
     """
-    
-    # set up inputs???
 
     # insert keys
     current_frame = start_point
@@ -81,6 +77,37 @@ def insert_keys(obj, morse: str, start_point: int, high: float, low: float, chos
         obj.keyframe_insert(data_path = chosen_property, frame = current_frame)
         current_frame = current_frame + time_unit * DIT + smoothing
 
+def insert_keys_light(obj, morse: str, start_point: int, high: float, low: float, time_unit: int, smoothing: int):
+        """
+    Description
+    ------------
+    Keyframes the power parameter of a light
+    object (point, spot, or area).
+    
+    Parameters
+    ------------
+    obj
+        The active object to be keyframed
+    
+    morse : str
+        The morse code string to be implemented
+
+    start_point : str
+        The frame to begin inserting keyframes at
+
+    high_val : float
+        The high or "on" value to set keyframes to
+
+    low_val : float
+        The low or "off" value to set keyframes to
+
+    time_unit : int
+        The base time unit in frames, equivalent to one dit
+
+    smoothing : int
+        The number of frames between high and low points
+        Cannot be greater than time_unit
+    """
 
 def translate(plaintext: str) -> str:
     """
@@ -126,7 +153,7 @@ def translate(plaintext: str) -> str:
     # combine into one string and return
     return ''.join(morse)
 
-def button_run(plaintext: str, start_point: int, high_val: float, low_val: float, chosen_property: str, time_unit: int, smoothing: int):
+def button_run(plaintext: str, start_point: int, high_val: float, low_val: float, mode: str, time_unit: int, smoothing: int):
     """
     Description
     ------------
@@ -147,8 +174,9 @@ def button_run(plaintext: str, start_point: int, high_val: float, low_val: float
     low_val : float
         The low or "off" value to set keyframes to
 
-    chosen_property : str
-        The property to animate, default is emission strength
+    mode : str
+        The mode to run in, either emission strength of a 
+        material or power of a light
 
     time_unit : int
         The base time unit in frames, equivalent to one dit
@@ -161,8 +189,17 @@ def button_run(plaintext: str, start_point: int, high_val: float, low_val: float
     # Get active object
     obj = bpy.context.active_object
 
+    # Check parameter validity
+    if smoothing > time_unit:
+        return # TODO: raise error here
+
     # Translate plaintext to morse code
     morse = translate(plaintext)
 
     # Insert keyframes
-    insert_keys(obj, morse, start_point, high_val, low_val, chosen_property, time_unit, smoothing)
+    if mode == "Material":
+        insert_keys_emission(obj, morse, start_point, high_val, low_val, time_unit, smoothing)
+    elif mode == "Light":
+        insert_keys_light(obj, morse, start_point, high_val, low_val, time_unit, smoothing)
+    else:
+        pass #TODO: raise invalid mode error
